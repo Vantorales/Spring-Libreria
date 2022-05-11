@@ -1,0 +1,33 @@
+body {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    padding: 0 15px;
+    overflow-x: hidden;
+}
+
+.main-title {
+    font-size: 60px;
+}
+
+.container {
+    background-color: white;
+    max-width: 1120px;
+    padding: 0;
+    margin: 0 auto;  
+}
+
+.card {
+    margin: 42px;
+}
+
+.card-body,
+.card-header {
+    background-color: rgb(221, 181, 236);
+    text-align: center;
+}
+
+.btn,
+.btn-primary {
+    display: flex;
+    margin: 0 auto;
+}
