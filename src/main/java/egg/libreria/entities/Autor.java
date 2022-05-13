@@ -5,10 +5,11 @@
  */
 package egg.libreria.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -16,34 +17,37 @@ import javax.persistence.Id;
  */
 @Entity
 public class Autor {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Integer id;
-        private String nombre;
-        private boolean alta;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
+    @Column(unique = true)
+    private String nombre;
+    @Column(nullable = false)
+    private Boolean alta;
 
     public Autor() {
     }
 
-    public Autor(String nombre, boolean alta) {
+    public Autor(String nombre, Boolean alta) {
         this.nombre = nombre;
         this.alta = alta;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
     public String getNombre() {
         return nombre;
     }
-    
-    public boolean isAlta() {
+
+    public Boolean getAlta() {
         return alta;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -51,9 +55,8 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public void setAlta(boolean alta) {
+    public void setAlta(Boolean alta) {
         this.alta = alta;
-    }      
-    
-}
+    }
 
+}

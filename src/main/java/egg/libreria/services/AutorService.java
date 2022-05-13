@@ -6,9 +6,10 @@
 package egg.libreria.services;
 
 import egg.libreria.entities.Autor;
+import egg.libreria.entities.Libro;
 import egg.libreria.errors.ErrorsService;
 import egg.libreria.repositories.AutorRepository;
-import java.util.List;
+import egg.libreria.repositories.LibroRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,50 +22,74 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class AutorService {
-    
+
     @Autowired
     private AutorRepository autorRepository;
-    
-    @Transactional (propagation = Propagation.NESTED)
-    public void crearAutor(String nombre, boolean alta) throws ErrorsService{
-        
-        if( nombre==null || nombre.isEmpty()){
-            throw new ErrorsService("El nombre del autor no puede ser nulo");
-        }
-        
+
+    @Autowired
+    private LibroRepository libroRepository;
+
+    @Transactional(propagation = Propagation.NESTED)
+    public void crearAutor(String nombre, Boolean alta) throws Exception {
+
+        validacion(nombre);
         Autor autor = new Autor(nombre, alta);
-        autor.setNombre(nombre);
-        autor.setAlta(alta);
         
         autorRepository.save(autor);
 
     }
-    
-    public void modificarAutor(Integer id, String nombre, boolean alta){
-        Autor autor = autorRepository.findById(id).get();
-        autor.setNombre(nombre);
-        autor.setAlta(alta);
-        
+
+    public Autor buscarAutorPorNombre(String nombre) throws ErrorsService {
+        validacion(nombre);
+        Optional<Autor> respuesta = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId());
+        if (respuesta.isPresent()) {
+            return autorRepository.buscarPorNombre(nombre);
+        } else {
+            throw new ErrorsService("No se encontró el autor ingresado");
+        }
+
+    }
+
+    @Transactional
+    public void modificarNombreAutor(String nombre, String nuevoNombre) throws ErrorsService {
+        validacion(nombre);
+        if (nuevoNombre == null || nuevoNombre.length() < 4 || nuevoNombre.trim().isEmpty()) {
+            throw new ErrorsService("El nuevo nombre introducido no es válido.");
+        }
+        Autor autor = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId()).get();
+
+        autor.setNombre(nuevoNombre);
         autorRepository.save(autor);
     }
-    
-    @Transactional (readOnly = true)
-    public List<Autor> mostrarAutores(){
-        return autorRepository.findAll();
+
+    public Autor buscarAutorPorLibro(String titulo) throws ErrorsService {
+        validacion(titulo);
+        Optional<Libro> respuesta = libroRepository.findById(libroRepository.buscarPorTitulo(titulo).getId());
+        if (respuesta.isPresent()) {
+            return libroRepository.buscarPorTitulo(titulo).getAutor();
+        } else {
+            throw new ErrorsService("El autor del libro no se encuentra");
+        }
+
     }
-    
-    @Transactional (readOnly = true)
-    public Autor buscarPorId(Integer id){
-        return autorRepository.buscarPorId(id);
-    }
-    
-    @Transactional (readOnly = true)
-    public void eliminarPorId(Integer id){
-        Optional<Autor> optional = autorRepository.findById(id);
-        
-        if(optional.isPresent()){
-            autorRepository.delete(optional.get());
+
+    @Transactional
+    public void eliminarAutorPorNombre(String nombre) throws ErrorsService {
+        validacion(nombre);
+        Autor autor = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId()).get();
+        Optional<Autor> respuesta = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId());
+        if (respuesta.isPresent()) {
+            autor.setAlta(false);
+            autorRepository.save(autor);
+        } else {
+            throw new ErrorsService("El autor no se encuentra");
         }
     }
-    
+
+    public void validacion(String nombre) throws ErrorsService {
+        if (nombre == null || nombre.trim().isEmpty() || nombre.length() < 3) {
+            throw new ErrorsService("El nombre no puede estar vacío y debe contener 3 caracteres o más");
+        }
+    }
+
 }

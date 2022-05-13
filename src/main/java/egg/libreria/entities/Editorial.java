@@ -5,33 +5,42 @@
  */
 package egg.libreria.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author Vanesa
  */
 @Entity
+@ToString
 public class Editorial {
-    
+
     @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Integer id;
-        private String nombre;
-        private boolean alta;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
+    @Column
+    private String nombre;
+    @Column
+    private Boolean alta;
 
     public Editorial() {
     }
 
-    public Editorial(String nombre, boolean alta) {
+    public Editorial(String nombre, Boolean alta) {
         this.nombre = nombre;
         this.alta = alta;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -39,11 +48,11 @@ public class Editorial {
         return nombre;
     }
 
-    public boolean isAlta() {
+    public Boolean getAlta() {
         return alta;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -51,8 +60,10 @@ public class Editorial {
         this.nombre = nombre;
     }
 
-    public void setAlta(boolean alta) {
+    public void setAlta(Boolean alta) {
         this.alta = alta;
     }
-        
+    
+    
+    
 }

@@ -8,7 +8,7 @@
     <title>BOOK ADM</title>
 </head>
 <body>
-    <div class="container" style= "text-aling:center">
+    <div class="container">
         <header class="main-title">
             <h1>Libreria admin</h1>
             <p>El administrador de libros más completo</p>         
@@ -17,42 +17,35 @@
         <div>
             <section>
                 <header>
-                    <h2>Bienvenidos <p>th:text = "${ titulo }"</p> a nuestro admin virtual</h2>    
+                    <h2>Bienvenidos <span th:text = "${ titulo }" ></span> a nuestro admin virtual</h2>    
                 </header>
                 <p>En esta web podras organizar una gran cantidad de libros, consultando la informacion mas pertinente de cada uno</p>
             </section>
         </div>
+        
 
         <h2>Seleccione la opción que desee</h2>     
             <div>
                 <div style="max-width: 18rem;">
-                    <div class="card-header">Administrar autores</div>
-                    <div class="card-body">
-                      <a href="/autor/administrador" id="buttonModal">
-                        click aquí
-                    </a>
+                    <div class="card-header">Administrar autores
+                      <a class="btn" href="/autor/administrador" id="buttonModal"> click aquí </a>
                     </div>
+                      
                   </div> 
 
                   <div style="max-width: 18rem;">
-                    <div class="card-header">Administrar editoriales</div>
-                    <div class="card-body">
-                      <button id="buttonModal">
-                        click aquí
-                    </button>
-                    </div>
+                    <div class="card-header">Administrar editoriales
+                      <a class="btn" href="/editorial/"> click aquí</a>
                   </div> 
+                </div>
 
                   <div style="max-width: 18rem;">
-                    <div class="card-header">Administrar libros</div>
-                    <div class="card-body">
-                      <button id="buttonModal">
-                        click aquí
-                    </button>
-                    </div>
+                    <div class="card-header">Administrar libros
+                      <a class="btn" href="/libro/"> click aquí</a>
                   </div> 
             </div>
         </div>
+      </div>
             
             
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>

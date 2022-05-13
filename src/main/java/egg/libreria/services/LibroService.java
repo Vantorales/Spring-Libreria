@@ -5,16 +5,18 @@
  */
 package egg.libreria.services;
 
-import egg.libreria.entities.Autor;
 import egg.libreria.entities.Editorial;
 import egg.libreria.entities.Libro;
+import egg.libreria.errors.ErrorsService;
+import egg.libreria.repositories.AutorRepository;
 import egg.libreria.repositories.LibroRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  *
@@ -22,59 +24,75 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class LibroService {
-    
+
+    @Autowired
+    private AutorService autorService;
+
+    @Autowired
+    private EditorialService editorialService;
+
     @Autowired
     private LibroRepository libroRepository;
-    
-    @Transactional (propagation = Propagation.NESTED)
-    public void crearLibro(Long isbn, String titulo, Integer anio, Integer ejemplares, Integer ejemplaresPrestados, Integer ejemplaresRestantes, boolean alta, Autor autor, Editorial editorial){
-        
-        Libro libro = new Libro(isbn, titulo, anio, ejemplares, ejemplaresPrestados, ejemplaresRestantes, alta, autor, editorial);
-        libro.setIsbn(isbn);
-        libro.setTitulo(titulo);
-        libro.setAnio(anio);
-        libro.setEjemplares(ejemplares);
-        libro.setEjemplaresPrestados(ejemplaresPrestados);
-        libro.setEjemplaresRestantes(ejemplaresRestantes);
-        libro.setAlta(alta);
-        libro.getAutor().getNombre();
-        libro.getEditorial().getNombre();
-        
-        libroRepository.save(libro);
-    }
-    
-    public void ModificarLibro(Integer id,Long isbn, String titulo, Integer anio, Integer ejemplares, Integer ejemplaresPrestados, Integer ejemplaresRestantes, boolean alta, Autor autor, Editorial editorial){
-        Libro libro = libroRepository.findById(id).get();
-        libro.setIsbn(isbn);
-        libro.setTitulo(titulo);
-        libro.setAnio(anio);
-        libro.setEjemplares(ejemplares);
-        libro.setEjemplaresPrestados(ejemplaresPrestados);
-        libro.setEjemplaresRestantes(ejemplaresRestantes);
-        libro.setAlta(alta);
-        libro.getAutor().setNombre(titulo);
-        libro.getEditorial().setNombre(titulo);
-        
-        libroRepository.save(libro);
-    }
-    
-    @Transactional (readOnly = true )
-    public List<Libro> mostrarLibros(){
-        return libroRepository.findAll();
-    }
-    
-    @Transactional (readOnly = true)
-    public Libro buscarPorId(Integer id){
-        return libroRepository.buscarPorId(id);
-    }
-  
-    @Transactional (readOnly = true )
-    public void eliminarPorId(Integer id){
-        Optional<Libro> optional = libroRepository.findById(id);
-        
-        if(optional.isPresent()){
-            libroRepository.delete(optional.get());
+
+    @Autowired
+    private AutorRepository autorRepository;
+
+    @javax.transaction.Transactional
+    public void crearLibro(String isbn, String titulo, Integer anio, String autor, String editorial) throws ErrorsService {
+
+        validacion(isbn, titulo, anio, autor);
+        Optional<Libro> respuesta = libroRepository.findById(libroRepository.buscarPorTitulo(titulo).getId());
+        Libro libro;
+        if (respuesta.isPresent()) {
+            libro = respuesta.get();
+            libro.setEjemplares(libro.getEjemplares() + 1);
+            libro.setAlta(true);
+            libro.setAutor(autorService.buscarAutorPorNombre(autor));
+            libro.setEditorial(editorialService.buscarEditorialPorNombre(editorial));
+        } else {
+            libro = new Libro(isbn, titulo, anio, autorService.buscarAutorPorNombre(autor), editorialService.buscarEditorialPorNombre(editorial));
+            libro.setEjemplares(1);
+            libro.setAlta(true);
         }
-    }   
-    
+        libroRepository.save(libro);
+
+    }
+
+/*
+    public void modifyBook(){
+        Optional<Author> answer2 = authorRepository.findById(authorRepository.findAuthorByName(nameAuthor).getId());
+        Author author = new Author();
+        if (answer2.isPresent()){
+            author
+        }
+
+        author.setName(nameAuthor);
+        author.setUp(true);
+        book.setAuthor(author);
+    }
+*/
+
+    public void validacion(String isbn, String titulo, Integer anio, String nombreAutor) throws ErrorsService {
+
+        if (isbn == null || isbn.trim().isEmpty()) throw new ErrorsService("El isbn no puede estar vacío");
+        if (titulo == null || titulo.trim().isEmpty()) throw new ErrorsService("El titulo no puede estar vacío");
+        if (anio== null || anio.toString().trim().isEmpty()) throw new ErrorsService("El año no puede estar vacío");
+        if (nombreAutor == null || nombreAutor.trim().isEmpty())
+            throw new ErrorsService("El nombre del autor no puede estar vacío");
+
+    }
+
+    public void validacionEditorialesList(List<Editorial> editoriales) throws ErrorsService {
+
+        for (Editorial editorial :editoriales) {
+            if (editorial.getNombre().trim().isEmpty())
+                throw new ErrorsService("El nombre del editor no puede estar vacío");
+        }
+
+    }
+
+    public List<Editorial> mergeEditorialesList(List<Editorial> list1, List<Editorial> list2) {
+        return Stream.concat(list1.stream(), list2.stream()).collect(Collectors.toList());
+    }
+
 }

@@ -23,9 +23,6 @@ public interface AutorRepository extends JpaRepository<Autor, String> {
      @Query("SELECT a FROM Autor a WHERE a.nombre= :nombre")
      public Autor buscarPorNombre(@Param("nombre") String nombre);
      
-     @Query("SELECT a FROM Autor a WHERE a.id= :id")
-     public Autor buscarPorId(@Param("id") Integer id);
-     
      @Query("SELECT a FROM Autor a")
      public List<Autor> mostrarAutores();
 

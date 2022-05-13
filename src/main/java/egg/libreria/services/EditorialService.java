@@ -8,11 +8,9 @@ package egg.libreria.services;
 import egg.libreria.entities.Editorial;
 import egg.libreria.errors.ErrorsService;
 import egg.libreria.repositories.EditorialRepository;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -21,50 +19,63 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class EditorialService {
-    
+
     @Autowired
     private EditorialRepository editorialRepository;
-    
-    @Transactional (propagation = Propagation.NESTED)
-    public void crearEditorial(String nombre, boolean alta) throws ErrorsService{
-        
-        if( nombre==null || nombre.isEmpty()){
-            throw new ErrorsService("El nombre de la editorial no puede ser nulo");
+
+    @Transactional
+    public void crearEditorial(String nombre) throws ErrorsService {
+
+        validacion(nombre);
+        Optional<Editorial> respuesta = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId());
+        if (!respuesta.isPresent()) {
+            Editorial editorial = new Editorial();
+            editorial.setNombre(nombre);
+            editorial.setAlta(true);
+            editorialRepository.save(editorial);
         }
-        
-        Editorial editorial = new Editorial(nombre, alta);
-        editorial.setNombre(nombre);
-        editorial.setAlta(alta);
-        
+
+    }
+
+    public Editorial buscarEditorialPorNombre(String nombre) throws ErrorsService {
+        validacion(nombre);
+        Optional<Editorial> respuesta = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId());
+        if (!respuesta.isPresent()) {
+            return respuesta.get();
+        } else {
+            throw new ErrorsService("No se encontró la editorial ingresada.");
+        }
+    }
+
+    @Transactional
+    public void modificarNombreEditorial(String nombre, String nuevoNombre) throws ErrorsService {
+        validacion(nombre);
+        if (nuevoNombre == null || nuevoNombre.length() < 4 || nuevoNombre.trim().isEmpty()) {
+            throw new ErrorsService("El nuevo nombre introducido no es válido.");
+        }
+        Editorial editorial = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId()).get();
+        editorial.setNombre(nuevoNombre);
         editorialRepository.save(editorial);
 
     }
-    
-    public void modificarAutor(Integer id, String nombre, boolean alta){
-        Editorial editorial = editorialRepository.findById(id).get();
-        editorial.setNombre(nombre);
-        editorial.setAlta(alta);
-        
-       editorialRepository.save(editorial);
-    }
-    
-    @Transactional (readOnly = true)
-    public List<Editorial> mostrarEditoriales(){
-        return editorialRepository.findAll();
-    }
-    
-    @Transactional (readOnly = true)
-    public Editorial buscarPorId(Integer id){
-        return editorialRepository.buscarPorId(id);
-    }
-    
-    @Transactional (readOnly = true)
-    public void eliminarPorId(Integer id){
-        Optional<Editorial> optional = editorialRepository.findById(id);
-        
-        if(optional.isPresent()){
-            editorialRepository.delete(optional.get());
+
+    @Transactional
+    public void eliminarEditorialPorNombre(String nombre) throws ErrorsService {
+        validacion(nombre);
+        Editorial editorial = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId()).get();
+        Optional<Editorial> respuesta = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId());
+        if (respuesta.isPresent()) {
+            editorial.setAlta(false);
+            editorialRepository.save(editorial);
+        } else {
+            throw new ErrorsService("La editorial no se encuentra");
         }
     }
-    
+
+    public void validacion(String nombre) throws ErrorsService {
+        if (nombre == null || nombre.trim().isEmpty() || nombre.length() < 3) {
+            throw new ErrorsService("El nombre no puede estar vacío y debe contener 3 caracteres o más");
+        }
+    }
+
 }

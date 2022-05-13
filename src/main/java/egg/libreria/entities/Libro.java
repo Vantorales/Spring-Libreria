@@ -5,11 +5,17 @@
  */
 package egg.libreria.entities;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -17,47 +23,66 @@ import javax.persistence.OneToOne;
  */
 @Entity
 public class Libro {
-    
-     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private Long isbn;
+
+    //Attributes with getters and setters
+    @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
+
+    @Column(unique = true, nullable = false)
+    private String isbn;
+
+    @Column
     private String titulo;
+
+    @Column
+    private Boolean alta;
+
+    @Column
     private Integer anio;
+
+    @Column
     private Integer ejemplares;
+
+    @Column(name = "ejemplares_prestados")
     private Integer ejemplaresPrestados;
-    private Integer ejemplaresRestantes;
-    private boolean alta;
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.REFRESH)
     private Autor autor;
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Editorial editorial;
 
     public Libro() {
     }
 
-    public Libro(Long isbn, String titulo, Integer anio, Integer ejemplares, Integer ejemplaresPrestados, Integer ejemplaresRestantes, boolean alta, Autor autor, Editorial editorial) {
+    public Libro(String isbn, String titulo, Boolean alta, Integer anio, Integer ejemplares) {
         this.isbn = isbn;
         this.titulo = titulo;
+        this.alta = alta;
         this.anio = anio;
         this.ejemplares = ejemplares;
-        this.ejemplaresPrestados = ejemplaresPrestados;
-        this.ejemplaresRestantes = ejemplaresRestantes;
-        this.alta = alta;
-        this.autor = autor;
-        this.editorial = editorial;
     }
 
-    public Integer getId() {
+    public Libro(String bn, String titulo, Integer anio, Autor buscarAutorPorNombre, Editorial buscarEditorialPorNombre) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getId() {
         return id;
     }
 
-    public Long getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
     public String getTitulo() {
         return titulo;
+    }
+
+    public Boolean getAlta() {
+        return alta;
     }
 
     public Integer getAnio() {
@@ -72,14 +97,6 @@ public class Libro {
         return ejemplaresPrestados;
     }
 
-    public Integer getEjemplaresRestantes() {
-        return ejemplaresRestantes;
-    }
-
-    public boolean isAlta() {
-        return alta;
-    }
-
     public Autor getAutor() {
         return autor;
     }
@@ -88,16 +105,20 @@ public class Libro {
         return editorial;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public void setIsbn(Long isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public void setAlta(Boolean alta) {
+        this.alta = alta;
     }
 
     public void setAnio(Integer anio) {
@@ -112,14 +133,6 @@ public class Libro {
         this.ejemplaresPrestados = ejemplaresPrestados;
     }
 
-    public void setEjemplaresRestantes(Integer ejemplaresRestantes) {
-        this.ejemplaresRestantes = ejemplaresRestantes;
-    }
-
-    public void setAlta(boolean alta) {
-        this.alta = alta;
-    }
-
     public void setAutor(Autor autor) {
         this.autor = autor;
     }
@@ -128,4 +141,21 @@ public class Libro {
         this.editorial = editorial;
     }
     
+    
+
+    @Override
+    public String toString() {
+        return "Libro{"
+                + "id='" + id + '\''
+                + ", isbn=" + isbn
+                + ", titulo='" + titulo + '\''
+                + ", alta=" + alta
+                + ", anio=" + anio
+                + ", ejemplares=" + ejemplares
+                + ", ejemplares prestados=" + ejemplaresPrestados
+                + ", autor=" + autor
+                + ", editorial=" + editorial
+                + '}';
+    }
+
 }
