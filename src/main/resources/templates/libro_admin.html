@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Libro administración</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/src/main/java/style.css">
+    </head>
+    <body>
+        <h1>administración de autores</h1>
+        <b></b>
+        <form method="POST" action="/libro/agregar" enctype="multipart/form-data">
+            <fieldset>
+                <p>isbn: <input type="number" name="isbn" size="40"></p>
+                <p>Titulo: <input type="text" name="titulo" size="40"></p>
+                <p>Año: <input type="number" name="anio" size="40"></p>
+                <p>Ejemplares: <input type="number" name="ejemplares" size="40"></p>
+                <p>¿Está dado de alta?
+                  <input type="radio" name="alta" value="true"> True
+                  <input type="radio" name="alta" value="false"> False
+                </p>
+                <p>Autor: <input type="text" name="nombre" size="40"></p>
+                <p>Editorial: <input type="text" name="nombre" size="40"></p>
+                <p>
+                  <input type="submit" value="Enviar">
+                  <input type="reset" value="Borrar">
+                </p>
+          </fieldset>
+          <fieldset>
+              <legend>Si desea ver una lista de los libros</legend>
+              <button>Ver lista</button>
+          </fieldset>
+
+
+          </form>
+    </body>
+</html>

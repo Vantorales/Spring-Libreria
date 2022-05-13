@@ -24,14 +24,14 @@ public class EditorialService {
     private EditorialRepository editorialRepository;
 
     @Transactional
-    public void crearEditorial(String nombre) throws ErrorsService {
+    public void crearEditorial(String nombre, Boolean alta) throws ErrorsService {
 
         validacion(nombre);
         Optional<Editorial> respuesta = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId());
         if (!respuesta.isPresent()) {
             Editorial editorial = new Editorial();
             editorial.setNombre(nombre);
-            editorial.setAlta(true);
+            editorial.setAlta(alta);
             editorialRepository.save(editorial);
         }
 
