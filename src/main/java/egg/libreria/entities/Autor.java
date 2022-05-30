@@ -8,8 +8,9 @@ package egg.libreria.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import org.hibernate.annotations.GenericGenerator;
+
 
 /**
  *
@@ -19,13 +20,14 @@ import org.hibernate.annotations.GenericGenerator;
 public class Autor {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column(unique = true)
     private String nombre;
     @Column(nullable = false)
     private Boolean alta;
+    @Column(nullable = false)
+    private Boolean visible; //Esto simulara una eliminación, solo lo ocultara para que no sea visible en el front y no borrar de la bd
 
     public Autor() {
     }

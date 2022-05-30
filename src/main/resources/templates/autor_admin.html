@@ -1,66 +1,68 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>Autor administración</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link rel="stylesheet" href="/src/main/java/style.css">
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     </head>
     <body>
-        <h1>administración de autores</h1>
-        <b th:text = "${exito}"></b>
-        <form method="POST" action="/autor/agregar" enctype="multipart/form-data">
+        <div class="container">
+            <h1>administración de autores</h1>
+            <b th:text = "${exito}"></b>
+            
+            <form method="POST" action="/autor/agregar" enctype="multipart/form-data">
+                <fieldset>
+                    <p>Nombre: <input type="text" name="nombre" size="40"></p>
+                    <p>¿Está dado de alta?
+                    <input type="radio" name="alta" value="true"> True
+                    <input type="radio" name="alta" value="false"> False
+                    </p>
+                    <p>
+                    <input type="submit" value="Enviar">
+                    <input type="reset" value="Borrar">
+                    </p>
+                </fieldset>
+            </form>
+            
             <fieldset>
-                <p>Nombre: <input type="text" name="nombre" size="40"></p>
-                <p>¿Está dado de alta?
-                  <input type="radio" name="alta" value="true"> True
-                  <input type="radio" name="alta" value="false"> False
-                </p>
-                <p>
-                  <input type="submit" value="Enviar">
-                  <input type="reset" value="Borrar">
-                </p>
-          </fieldset>
-          <fieldset>
-              <legend>Si desea ver una lista de los autores</legend>
-              <a th:href="@{/autor/getAutores}">ver lista</a>
-              <button>Ver lista</button>
-          </fieldset>
+                <legend>Si desea ver una lista de los autores</legend>
+                <a class="btn btn-warning" th:href="@{/autor/getAutores}">ver lista</a>
+            </fieldset>
+            
             <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Alta</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="autor : ${autores}">
-                <td th:text="${autor.id}"></td>
-                <td th:text="${autor.nombre}"></td>
-                <td th:text="${autor.alta}"></td>
-                <td>
-                    <a class="btn btn-warning" th:href="@{/autores/editar/} + ${autor.id}">Editar <i
-                            class="fa fa-edit"></i></a>
-                </td>
-                <td>
-                    <form th:action="@{/autores/eliminar}" method="post">
-                        <input type="hidden" name="id" th:value="${autor.id}"/>
-                        <button type="submit" class="btn btn-danger">Eliminar <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-          </form>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Alta</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="autor : ${autores}">
+                        <td th:text="${autor.id}"></td>
+                        <td th:text="${autor.nombre}"></td>
+                        <td th:text="${autor.alta}"></td>
+                        <td>
+                            <a class="btn btn-warning" th:href="@{/autores/editar/} + ${autor.id}">Editar <i
+                                    class="fa fa-edit"></i></a>
+                        </td>
+                        <td>
+                            <form th:action="@{/autor/eliminar}" method="POST">
+                                <input type="hidden" name="nombre" th:value="${autor.nombre}"/>
+                                <button type="submit" class="btn btn-danger">Eliminar<i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>    
     </body>
 </html>

@@ -10,6 +10,7 @@ import egg.libreria.services.AutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,7 @@ public class AutorController {
     
     @GetMapping("/getAutores")
     public String getAutores(ModelMap vistaAutor){
-        autorService.getAutores();
-        vistaAutor.addAttribute("autores", autorService);
+        vistaAutor.addAttribute("autores", autorService.getAutores());
         
         return "autor_admin";
     }
@@ -49,6 +49,18 @@ public class AutorController {
         } catch (ErrorsService e) {
             e.printStackTrace();
             vistaAutor.put("exito","error al registrar");
+        }
+        return "autor_admin";
+    }
+    
+    @PostMapping("/eliminar")
+    public String Eliminar(ModelMap vistaAutor, @RequestParam String nombre) throws Exception {
+        try {
+           
+            autorService.eliminarAutorPorNombre(nombre);
+                
+        } catch (ErrorsService e) {
+            e.printStackTrace();
         }
         return "autor_admin";
     }
