@@ -28,9 +28,38 @@ and open the template in the editor.
           </fieldset>
           <fieldset>
               <legend>Si desea ver una lista de los autores</legend>
+              <a th:href="@{/autor/getAutores}">ver lista</a>
               <button>Ver lista</button>
           </fieldset>
-
+            <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Alta</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="autor : ${autores}">
+                <td th:text="${autor.id}"></td>
+                <td th:text="${autor.nombre}"></td>
+                <td th:text="${autor.alta}"></td>
+                <td>
+                    <a class="btn btn-warning" th:href="@{/autores/editar/} + ${autor.id}">Editar <i
+                            class="fa fa-edit"></i></a>
+                </td>
+                <td>
+                    <form th:action="@{/autores/eliminar}" method="post">
+                        <input type="hidden" name="id" th:value="${autor.id}"/>
+                        <button type="submit" class="btn btn-danger">Eliminar <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
           </form>
     </body>

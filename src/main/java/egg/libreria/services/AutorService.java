@@ -10,6 +10,7 @@ import egg.libreria.entities.Libro;
 import egg.libreria.errors.ErrorsService;
 import egg.libreria.repositories.AutorRepository;
 import egg.libreria.repositories.LibroRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,12 @@ public class AutorService {
         }
 
     }
+    
+   public List<Autor> getAutores()
+   {
+       List<Autor> listaAutores = autorRepository.findAll();
+       return listaAutores;
+   }
 
     @Transactional
     public void modificarNombreAutor(String nombre, String nuevoNombre) throws ErrorsService {

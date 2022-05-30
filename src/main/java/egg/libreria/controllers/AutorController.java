@@ -30,6 +30,14 @@ public class AutorController {
     public String autorAdmin() {
         return "autor_admin";
     }
+    
+    @GetMapping("/getAutores")
+    public String getAutores(ModelMap vistaAutor){
+        autorService.getAutores();
+        vistaAutor.addAttribute("autores", autorService);
+        
+        return "autor_admin";
+    }
 
     @PostMapping("/agregar")
     public String agregar(ModelMap vistaAutor, @RequestParam String nombre, @RequestParam String alta) throws Exception {
@@ -44,5 +52,5 @@ public class AutorController {
         }
         return "autor_admin";
     }
-
+   
 }
