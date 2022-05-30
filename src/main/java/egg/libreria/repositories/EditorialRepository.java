@@ -26,7 +26,7 @@ public interface EditorialRepository extends JpaRepository<Editorial, String> {
     @Query("SELECT e FROM Editorial e WHERE e.id= :id")
     public Editorial buscarPorId(@Param("id") Integer id);
     
-    @Query("SELECT e FROM Editorial e")
+    @Query("SELECT e FROM Editorial e WHERE e.visible= 1")
     public List<Editorial> mostrarEditoriales();
     
     public Optional <Editorial>findById(Integer id);

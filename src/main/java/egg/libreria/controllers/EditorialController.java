@@ -22,13 +22,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/editorial")
 public class EditorialController {
-    
 
     @Autowired
     private EditorialService editorialService;
 
     @GetMapping("/administrador")
     public String editorialAdmin() {
+        return "editorial_admin";
+    }
+    
+    @GetMapping("/getEditoriales")
+    public String getEditoriales(ModelMap vistaEditorial){
+        vistaEditorial.addAttribute("editoriales", editorialService.getEditoriales());
+        
         return "editorial_admin";
     }
 
@@ -43,7 +49,19 @@ public class EditorialController {
             e.printStackTrace();
             vistaEditorial.put("exito","error al registrar");
         }
-        return "autor_admin";
+        return "editorial_admin";
+    }
+    
+    @PostMapping("/eliminar")
+    public String Eliminar(ModelMap vistaEditorial, @RequestParam String nombre) throws Exception{
+        try {
+           
+            editorialService.eliminarEditorialPorNombre(nombre);
+                
+        } catch (ErrorsService e) {
+            e.printStackTrace();
+        }
+        return "editorial_admin";
     }
 
 }

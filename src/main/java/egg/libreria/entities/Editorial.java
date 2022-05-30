@@ -9,9 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -27,10 +24,26 @@ public class Editorial {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    @Column
+    @Column(unique = true)
     private String nombre;
-    @Column
+    @Column(nullable = false)
     private Boolean alta;
+    @Column(nullable = false)
+    private Boolean visible;
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public Editorial(String nombre, Boolean alta, Boolean visible) {
+        this.nombre = nombre;
+        this.alta = alta;
+        this.visible = visible;
+    }
 
     public Editorial() {
     }

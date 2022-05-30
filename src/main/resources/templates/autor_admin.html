@@ -12,7 +12,7 @@
     </head>
     <body>
         <div class="container">
-            <h1>administración de autores</h1>
+            <h1>Administración de autores</h1>
             <b th:text = "${exito}"></b>
             
             <form method="POST" action="/autor/agregar" enctype="multipart/form-data">
@@ -31,10 +31,10 @@
             
             <fieldset>
                 <legend>Si desea ver una lista de los autores</legend>
-                <a class="btn btn-warning" th:href="@{/autor/getAutores}">ver lista</a>
+                <a class="btn btn-warning" th:href="@{/autor/getAutores}">Ver lista</a>
             </fieldset>
             
-            <table class="table table-bordered">
+            <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
                         <th></th>

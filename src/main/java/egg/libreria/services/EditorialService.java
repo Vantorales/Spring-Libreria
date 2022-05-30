@@ -8,10 +8,12 @@ package egg.libreria.services;
 import egg.libreria.entities.Editorial;
 import egg.libreria.errors.ErrorsService;
 import egg.libreria.repositories.EditorialRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  *
@@ -23,18 +25,12 @@ public class EditorialService {
     @Autowired
     private EditorialRepository editorialRepository;
 
-    @Transactional
+    @Transactional(propagation = Propagation.NESTED)
     public void crearEditorial(String nombre, Boolean alta) throws ErrorsService {
 
         validacion(nombre);
-        Optional<Editorial> respuesta = editorialRepository.findById(editorialRepository.buscarPorNombre(nombre).getId());
-        if (!respuesta.isPresent()) {
-            Editorial editorial = new Editorial();
-            editorial.setNombre(nombre);
-            editorial.setAlta(alta);
-            editorialRepository.save(editorial);
-        }
-
+        Editorial editorial = new Editorial(nombre, alta, true);
+        editorialRepository.save(editorial);
     }
 
     public Editorial buscarEditorialPorNombre(String nombre) throws ErrorsService {
@@ -45,6 +41,11 @@ public class EditorialService {
         } else {
             throw new ErrorsService("No se encontró la editorial ingresada.");
         }
+    }
+
+    public List<Editorial> getEditoriales() {
+        List<Editorial> listaEditoriales = editorialRepository.mostrarEditoriales();
+        return listaEditoriales;
     }
 
     @Transactional

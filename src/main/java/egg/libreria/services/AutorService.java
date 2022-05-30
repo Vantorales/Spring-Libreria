@@ -34,7 +34,7 @@ public class AutorService {
     public void crearAutor(String nombre, Boolean alta) throws Exception {
 
         validacion(nombre);
-        Autor autor = new Autor(nombre, alta);
+        Autor autor = new Autor(nombre, alta, true);
         
         autorRepository.save(autor);
 
@@ -51,9 +51,8 @@ public class AutorService {
 
     }
     
-   public List<Autor> getAutores()
-   {
-       List<Autor> listaAutores = autorRepository.findAll();
+   public List<Autor> getAutores(){
+       List<Autor> listaAutores = autorRepository.mostrarAutores();
        return listaAutores;
    }
 
@@ -86,7 +85,7 @@ public class AutorService {
         Autor autor = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId()).get();
         Optional<Autor> respuesta = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId());
         if (respuesta.isPresent()) {
-            autor.setAlta(false);
+            autor.setVisible(false);
             autorRepository.save(autor);
         } else {
             throw new ErrorsService("El autor no se encuentra");

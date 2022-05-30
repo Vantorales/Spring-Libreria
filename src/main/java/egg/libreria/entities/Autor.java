@@ -33,6 +33,20 @@ public class Autor {
         this.alta = alta;
     }
 
+    public Autor(String nombre, Boolean alta, Boolean visible) {
+        this.nombre = nombre;
+        this.alta = alta;
+        this.visible = visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
     public String getId() {
         return id;
     }
