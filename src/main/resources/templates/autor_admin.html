@@ -37,6 +37,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>Alta</th>
@@ -45,7 +46,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="autor : ${autores}">
+                    <tr th:each="autor,iterador : ${autores}">
+                        <td th:text="${iterador.count}"></td>
                         <td th:text="${autor.id}"></td>
                         <td th:text="${autor.nombre}"></td>
                         <td th:text="${autor.alta}"></td>
