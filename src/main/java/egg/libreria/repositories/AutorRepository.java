@@ -26,6 +26,6 @@ public interface AutorRepository extends JpaRepository<Autor, String> {
      @Query("SELECT a FROM Autor a WHERE a.visible= 1")
      public List<Autor> mostrarAutores();
 
-    public Optional<Autor>findById(Integer id);
+    public Optional<Autor>findById(String id);
     
 }
