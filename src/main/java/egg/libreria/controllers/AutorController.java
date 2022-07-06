@@ -34,6 +34,7 @@ public class AutorController {
     @GetMapping("/getAutores")
     public String getAutores(ModelMap vistaAutor){
         vistaAutor.addAttribute("autores", autorService.getAutores());
+        vistaAutor.addAttribute("mostrar", true);
         
         return "autor_admin";
     }
@@ -51,9 +52,26 @@ public class AutorController {
         }
         return "autor_admin";
     }
-    
+
+    @PostMapping("/modificar")
+    public String modificar(ModelMap vistaAutor, @RequestParam String idEditar, @RequestParam String nombreEditar, @RequestParam String checkAlta) throws Exception{
+
+        try {
+            Boolean auxAlta = Boolean.valueOf(checkAlta);
+            autorService.modificarAutor(idEditar, nombreEditar, auxAlta);
+            vistaAutor.addAttribute("autores", autorService.getAutores());
+            vistaAutor.addAttribute("mostrar", true);
+            // vistaAutor.addAttribute("exito", "se modifico correctamente");
+            
+        } catch (ErrorsService e) {
+            e.printStackTrace();
+            // vistaAutor.put("error","error al registrar");
+        }
+        return "autor_admin";
+    }
+
     @PostMapping("/eliminar")
-    public String Eliminar(ModelMap vistaAutor, @RequestParam String nombre) throws Exception {
+    public String eliminar(ModelMap vistaAutor, @RequestParam String nombre) throws Exception {
         try {
            
             autorService.eliminarAutorPorNombre(nombre);

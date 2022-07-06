@@ -59,13 +59,31 @@ public class AutorService {
     @Transactional
     public void modificarNombreAutor(String nombre, String nuevoNombre) throws ErrorsService {
         validacion(nombre);
-        if (nuevoNombre == null || nuevoNombre.length() < 4 || nuevoNombre.trim().isEmpty()) {
-            throw new ErrorsService("El nuevo nombre introducido no es válido.");
-        }
+        validacion(nuevoNombre);
         Autor autor = autorRepository.findById(autorRepository.buscarPorNombre(nombre).getId()).get();
 
         autor.setNombre(nuevoNombre);
         autorRepository.save(autor);
+    }
+
+    @Transactional
+    public void modificarAutor(String id, String nombre, Boolean alta) throws ErrorsService{
+        
+        validacion(nombre);
+
+        Optional<Autor> resultAutor = autorRepository.findById(id);
+
+        if(resultAutor.isPresent())
+        {
+            Autor nuevoAutor = resultAutor.get();
+
+            nuevoAutor.setNombre(nombre);
+            nuevoAutor.setAlta(alta);
+
+            autorRepository.save(nuevoAutor);
+        }
+
+
     }
 
     public Autor buscarAutorPorLibro(String titulo) throws ErrorsService {
